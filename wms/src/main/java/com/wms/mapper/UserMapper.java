@@ -1,16 +1,18 @@
 package com.wms.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wms.entity.User;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
 /**
- * @author Brian
- * @version 1.0
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author wms
+ * @since 2023-03-29
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    List<User> listAll();
+
 }
