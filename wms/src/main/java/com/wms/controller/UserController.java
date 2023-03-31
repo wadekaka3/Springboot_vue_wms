@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import com.wms.common.QueryPageParam;
+import com.wms.common.Result;
 import com.wms.entity.User;
 import com.wms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +108,7 @@ public class UserController {
     }
 
     @PostMapping("/listPageC1")
-    public List<User> listPageC1(@RequestBody QueryPageParam query){
+    public Result listPageC1(@RequestBody QueryPageParam query){
         HashMap param = query.getParam();
         String name = (String)param.get("name");
         System.out.println("name==="+(String)param.get("name"));
@@ -124,7 +125,7 @@ public class UserController {
 
         System.out.println("total=="+result.getTotal());
 
-        return result.getRecords();
+        return Result.success(result.getRecords(), result.getTotal());
     }
 
 
