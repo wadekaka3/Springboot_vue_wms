@@ -4,7 +4,6 @@ package com.wms.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import com.wms.common.QueryPageParam;
 import com.wms.common.Result;
 import com.wms.entity.User;
