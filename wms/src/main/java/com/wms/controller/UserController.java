@@ -3,6 +3,7 @@ package com.wms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wms.common.QueryPageParam;
 import com.wms.common.Result;
@@ -62,11 +63,11 @@ public class UserController {
 
     // query (like, eq)
     @PostMapping("/listP")
-    public List<User> listP(@RequestBody User user) {
+    public Result listP(@RequestBody User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper();
         lambdaQueryWrapper.eq(User::getName, user.getName());
         /** lambdaQueryWrapper.like(User::getName, user.getName()); */
-        return userService.list(lambdaQueryWrapper);
+        return Result.success(userService.list(lambdaQueryWrapper));
     }
 
     @PostMapping("/listPage")
@@ -110,14 +111,23 @@ public class UserController {
     public Result listPageC1(@RequestBody QueryPageParam query){
         HashMap param = query.getParam();
         String name = (String)param.get("name");
-        System.out.println("name==="+(String)param.get("name"));
+        String sex = (String)param.get("sex");
+        String roleId = (String)param.get("roleId");
 
         Page<User> page = new Page();
         page.setCurrent(query.getPageNum());
         page.setSize(query.getPageSize());
 
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper();
-        lambdaQueryWrapper.like(User::getName,name);
+        if(StringUtils.isNotBlank(name) && !"null".equals(name)){
+            lambdaQueryWrapper.like(User::getName,name);
+        }
+        if(StringUtils.isNotBlank(sex)){
+            lambdaQueryWrapper.eq(User::getSex,sex);
+        }
+        if(StringUtils.isNotBlank(roleId)){
+            lambdaQueryWrapper.eq(User::getRoleId,roleId);
+        }
 
 
         IPage result = userService.pageCC(page,lambdaQueryWrapper);
