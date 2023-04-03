@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wms.common.QueryPageParam;
 import com.wms.common.Result;
+import com.wms.entity.Menu;
 import com.wms.entity.User;
+import com.wms.service.MenuService;
 import com.wms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +31,58 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MenuService menuService;
+
     // search all
     @GetMapping("/list")
     public List<User> list() {
         return userService.list();
     }
 
-    // insert
+    @GetMapping("/findByNo")
+    public Result findByNo(@RequestParam String no) {
+        List list = userService.lambdaQuery().eq(User::getNo, no).list();
+        return list.size()>0?Result.success(list):Result.fail();
+    }
+
+    // del
+    @GetMapping("/del")
+    public Result del(@RequestParam String id) {
+        return userService.removeById(id)?Result.success():Result.fail();
+    }
+
+    // login
+    @PostMapping("/login")
+    public Result login(@RequestBody User user){
+        List list = userService.lambdaQuery()
+                .eq(User::getNo,user.getNo())
+                .eq(User::getPassword,user.getPassword()).list();
+
+
+        if(list.size()>0){
+            User user1 = (User)list.get(0);
+            List menuList = menuService.lambdaQuery().like(Menu::getMenuright,user1.getRoleId()).list();
+            HashMap res = new HashMap();
+            res.put("user",user1);
+            res.put("menu",menuList);
+            return Result.success(res);
+        }
+        return Result.fail();
+    }
+
+
+    // update
+    @PostMapping("/update")
+    public Result update(@RequestBody User user) {
+        return userService.updateById(user)?Result.success():Result.fail();
+    }
+
+
+    // save
     @PostMapping("/save")
-    public boolean save(@RequestBody User user) {
-        return userService.save(user);
+    public Result save(@RequestBody User user) {
+        return userService.save(user)?Result.success():Result.fail();
     }
 
     // modify
